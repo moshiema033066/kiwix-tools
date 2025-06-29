@@ -38,6 +38,7 @@ jobs:
         # Artifact comes in a folder; find the zip and extract
         ART="$ART_DIR"
         echo "Artifact directory: $ART"
+        echo "Listing artifact contents for debug:"; ls -R "$ART" | head -n 100 || true
         # If the artifact is a zip archive, extract it first
         ZIP=$(find "$ART" -maxdepth 1 -name "*.zip" -type f | head -n1 || true)
         if [ -n "$ZIP" ]; then
