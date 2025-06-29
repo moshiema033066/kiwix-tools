@@ -38,6 +38,14 @@ jobs:
         # Artifact comes in a folder; find the zip and extract
         ART="$ART_DIR"
         echo "Artifact directory: $ART"
+        # If the artifact is a zip archive, extract it first
+        ZIP=$(find "$ART" -maxdepth 1 -name "*.zip" -type f | head -n1 || true)
+        if [ -n "$ZIP" ]; then
+          echo "Found zip artifact: $ZIP -> extracting"
+          mkdir extracted && unzip -q "$ZIP" -d extracted
+          ART="$(pwd)/extracted"
+        fi
+
         SERVE=$(find "$ART" -name kiwix-serve -type f | head -n1)
         MANAGE=$(find "$ART" -name kiwix-manage -type f | head -n1)
         if [ -z "$SERVE" ] || [ -z "$MANAGE" ]; then echo "Branded binaries not found in artifact" >&2; exit 1; fi
