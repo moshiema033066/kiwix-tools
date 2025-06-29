@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-deb:
+    if: ${{ false }} # Disabled for SurviveOS fork
     runs-on: ubuntu-22.04
     strategy:
       fail-fast: false
