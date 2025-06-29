@@ -49,13 +49,23 @@ jobs:
         # create minimal Dockerfile
         cat > buildctx/Dockerfile <<'EOF'
         FROM ubuntu:22.04
-        RUN apt-get update && DEBIAN_FRONTEND=noninteractive \
+
+        # Add Kiwix PPA (provides libzim9 & libkiwix14 runtime deps)
+        RUN apt-get update && \
+            apt-get install -y --no-install-recommends curl gnupg dirmngr ca-certificates && \
+            mkdir -p /etc/apt/keyrings && \
+            curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x012AEA4FFD0486EA2F22C80C91262FF81F6F5758" | \
+              gpg --dearmor -o /etc/apt/keyrings/kiwix-archive.gpg && \
+            echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/kiwix-archive.gpg] http://ppa.launchpad.net/kiwixteam/release/ubuntu jammy main" > /etc/apt/sources.list.d/kiwix.list && \
+            apt-get update && DEBIAN_FRONTEND=noninteractive \
             apt-get install -y --no-install-recommends libstdc++6 libzim9 libkiwix14 libmagic1 zlib1g && \
             rm -rf /var/lib/apt/lists/*
+
         COPY kiwix-serve /usr/local/bin/
         COPY kiwix-manage /usr/local/bin/
         COPY make-library.sh /usr/local/bin/
         RUN chmod +x /usr/local/bin/make-library.sh
+
         ENTRYPOINT ["kiwix-serve"]
         EOF
 
