@@ -34,8 +34,11 @@ jobs:
       name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        pattern: '*'
+        pattern: 'kiwix-tools-*'
         path: binaries
+
+    - name: Debug: List files after artifact download
+      run: ls -lR binaries
 
     - name: Prepare build context
       env:
@@ -46,8 +49,8 @@ jobs:
         ART="$ART_DIR"
         echo "Artifact directory: $ART"
         echo "Listing artifact contents for debug:"; ls -R "$ART" | head -n 100 || true
-        # If the artifact is a zip archive, extract it first
-        ZIP=$(find "$ART" -maxdepth 1 -name "*.zip" -type f | head -n1 || true)
+        # Find the zip file inside binaries/ and extract it
+        ZIP=$(find "$ART" -type f -name "*.zip" | head -n1 || true)
         if [ -n "$ZIP" ]; then
           echo "Found zip artifact: $ZIP -> extracting"
           mkdir extracted && unzip -q "$ZIP" -d extracted
