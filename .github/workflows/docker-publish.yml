@@ -31,6 +31,8 @@ jobs:
         merge-multiple: true
 
     - name: Prepare build context
+      env:
+        ART_DIR: ${{ steps.dl.outputs.download-path }}
       run: |
         mkdir buildctx
         # Artifact comes in a folder; find the zip and extract
