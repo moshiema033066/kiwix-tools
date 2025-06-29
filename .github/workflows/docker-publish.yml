@@ -35,11 +35,10 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         run-id: ${{ github.event.workflow_run.id }}
-        path: binaries
 
     - name: Prepare build context
       env:
-        ART_DIR: binaries
+        ART_DIR: ${{ steps.dl.outputs.download-path }}
       run: |
         mkdir buildctx
         # Artifact comes in a folder; find the zip and extract
@@ -110,4 +109,4 @@ jobs:
           ghcr.io/${{ github.repository_owner }}/surviveos-hub:latest
           ghcr.io/${{ github.repository_owner }}/surviveos-hub:sha-${{ github.event.workflow_run.head_sha }} 
       env:
-        ART_DIR: binaries 
+        ART_DIR: ${{ steps.dl.outputs.download-path }} 
