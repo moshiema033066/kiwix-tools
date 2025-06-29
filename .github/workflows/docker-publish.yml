@@ -33,8 +33,7 @@ jobs:
       name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        pattern: kiwix-tools-*
-        merge-multiple: true
+        name: kiwix-tools-${{ github.event.workflow_run.head_sha }}
         path: binaries
         run-id: ${{ github.event.workflow_run.id }}
 
