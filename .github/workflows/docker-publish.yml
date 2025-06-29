@@ -20,6 +20,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
+      actions: read
       contents: read
       packages: write
 
@@ -33,8 +34,8 @@ jobs:
       name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        pattern: kiwix-tools-*
-        merge-multiple: true
+        name: kiwix-tools-${{ github.event.workflow_run.head_sha }}
+        run-id: ${{ github.event.workflow_run.id }}
         path: binaries
 
     - name: Prepare build context
