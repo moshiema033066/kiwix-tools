@@ -33,7 +33,8 @@ jobs:
       run: |
         mkdir buildctx
         # Artifact comes in a folder; find the zip and extract
-        ZIP=$(find . -name 'kiwix-tools-*.zip' | head -n1)
+        ZIP=$(find "$GITHUB_WORKSPACE" -type f -name 'kiwix-tools-*.zip' | head -n1)
+        if [ -z "$ZIP" ]; then echo "Artifact zip not found" >&2; exit 1; fi
         unzip -q "$ZIP" -d buildctx
         # copy supporting files needed for image
         cp make-library.sh buildctx/
