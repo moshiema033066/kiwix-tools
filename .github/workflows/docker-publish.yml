@@ -29,6 +29,7 @@ jobs:
       with:
         pattern: kiwix-tools-*
         merge-multiple: true
+        path: binaries
 
     - name: Prepare build context
       env:
