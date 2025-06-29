@@ -1,0 +1,64 @@
+name: SurviveOS-branding build
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        submodules: recursive
+
+    - name: Install build tool-chain & libraries
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends \
+          meson ninja-build gcc g++ pkg-config \
+          libzim-dev libkiwix-dev \
+          zlib1g-dev libbz2-dev liblzma-dev \
+          libicu-dev libcurl4-gnutls-dev libsqlite3-dev libmagic-dev \
+          libdocopt-dev ca-certificates
+
+        DOCOPTPATH="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/pkgconfig"
+        sudo mkdir -p "$DOCOPTPATH"
+        printf 'prefix=/usr\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)\nincludedir=${prefix}/include\n\nName: docopt\nDescription: C++11 port of docopt\nVersion: 0.6.3\nLibs: -L${libdir} -ldocopt\nCflags: -I${includedir}\n' | sudo tee "$DOCOPTPATH/docopt.pc" >/dev/null
+
+    - name: Set up Node.js (LTS)
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+        cache: 'npm'
+
+    - name: Build kiwix-js-ui
+      run: |
+        if [ -d kiwix-js-ui ]; then
+          pushd kiwix-js-ui
+          npm ci
+          npm run build
+          popd
+
+          rm -rf src/assets/skin
+          mkdir -p src/assets/skin
+          cp -r kiwix-js-ui/dist/* src/assets/skin/
+        else
+          echo "kiwix-js-ui directory not found; skipping UI rebuild."
+        fi
+
+    - name: Build kiwix-tools
+      run: |
+        meson setup build --buildtype=release
+        ninja -C build
+
+    - name: Upload kiwix binaries
+      uses: actions/upload-artifact@v3
+      with:
+        name: kiwix-tools-${{ github.sha }}
+        path: |
+          build/src/server/kiwix-serve
+          build/src/manager/kiwix-manage 
