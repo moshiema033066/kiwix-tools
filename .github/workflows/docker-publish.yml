@@ -33,9 +33,11 @@ jobs:
       run: |
         mkdir buildctx
         # Artifact comes in a folder; find the zip and extract
-        ZIP=$(find "$GITHUB_WORKSPACE" -type f -name 'kiwix-tools-*.zip' | head -n1)
-        if [ -z "$ZIP" ]; then echo "Artifact zip not found" >&2; exit 1; fi
-        unzip -q "$ZIP" -d buildctx
+        SERVE=$(find "$GITHUB_WORKSPACE" -name kiwix-serve -type f | head -n1)
+        MANAGE=$(find "$GITHUB_WORKSPACE" -name kiwix-manage -type f | head -n1)
+        if [ -z "$SERVE" ] || [ -z "$MANAGE" ]; then echo "Branded binaries not found in artifact" >&2; exit 1; fi
+        cp "$SERVE" buildctx/kiwix-serve
+        cp "$MANAGE" buildctx/kiwix-manage
         # copy supporting files needed for image
         cp make-library.sh buildctx/
         cp -a zims buildctx/zims || true
