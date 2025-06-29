@@ -34,11 +34,13 @@ jobs:
           libzim-dev libkiwix-dev \
           zlib1g-dev libbz2-dev liblzma-dev \
           libicu-dev libcurl4-gnutls-dev libsqlite3-dev libmagic-dev \
-          libdocopt-dev ca-certificates
+          libdocopt-dev ca-certificates dpkg-dev
 
-        DOCOPTPATH="/usr/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)/pkgconfig"
+        MARCH=$(dpkg-architecture -qDEB_HOST_MULTIARCH)
+        DOCOPTPATH="/usr/lib/${MARCH}/pkgconfig"
+
         sudo mkdir -p "$DOCOPTPATH"
-        printf 'prefix=/usr\nexec_prefix=${prefix}\nlibdir=${exec_prefix}/lib/$(dpkg-architecture -qDEB_HOST_MULTIARCH)\nincludedir=${prefix}/include\n\nName: docopt\nDescription: C++11 port of docopt\nVersion: 0.6.3\nLibs: -L${libdir} -ldocopt\nCflags: -I${includedir}\n' | sudo tee "$DOCOPTPATH/docopt.pc" >/dev/null
+        printf "prefix=/usr\nexec_prefix=\${prefix}\nlibdir=\${exec_prefix}/lib/${MARCH}\nincludedir=\${prefix}/include\n\nName: docopt\nDescription: C++11 port of docopt\nVersion: 0.6.3\nLibs: -L\${libdir} -ldocopt\nCflags: -I\${includedir}\n" | sudo tee "$DOCOPTPATH/docopt.pc" > /dev/null
 
     - name: Set up Node.js (LTS)
       uses: actions/setup-node@v3
