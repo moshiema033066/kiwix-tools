@@ -5,6 +5,12 @@ on:
     workflows: ["SurviveOS-branding build"]
     types:
       - completed
+  workflow_dispatch:
+    inputs:
+      dummy:
+        description: "Manual run trigger"
+        required: false
+        default: "manual"
 
 jobs:
   publish-image:
