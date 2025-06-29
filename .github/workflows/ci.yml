@@ -1,13 +1,9 @@
 name: CI
 
 on:
-  pull_request:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 jobs:
-  _note: "CI disabled for SurviveOS fork; use SurviveOS-branding build instead"
   Windows:
     if: ${{ false }} # disabled
     runs-on: windows-2022
