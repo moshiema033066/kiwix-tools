@@ -31,6 +31,14 @@ if static_linkage
   if librt.found()
     all_deps += librt
   endif
+else
+  # Add librt on Linux even for dynamic builds to satisfy timer_* symbols
+  if host_machine.system() != 'darwin'
+    librt_dyn = compiler.find_library('rt', required:false)
+    if librt_dyn.found()
+      all_deps += librt_dyn
+    endif
+  endif
 endif
 
 subdir('src')
