@@ -72,5 +72,5 @@ jobs:
       with:
         name: kiwix-tools-${{ github.sha }}
         path: |
-          build/src/server/kiwix-serve
-          build/src/manager/kiwix-manage 
+          build/src/**/kiwix-serve
+          build/src/**/kiwix-manage 
