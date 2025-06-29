@@ -34,7 +34,6 @@ jobs:
       name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        name: kiwix-tools-${{ github.event.workflow_run.head_sha }}
         run-id: ${{ github.event.workflow_run.id }}
         path: binaries
 
