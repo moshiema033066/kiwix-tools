@@ -18,7 +18,7 @@ jobs:
 #          - debian-trixie
 #          - debian-bookworm
 #          - debian-bullseye
-          - ubuntu-noble
+#          - ubuntu-noble
           - ubuntu-jammy
 
     steps:

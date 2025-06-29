@@ -7,7 +7,9 @@ on:
       - main
 
 jobs:
+  _note: "CI disabled for SurviveOS fork; use SurviveOS-branding build instead"
   Windows:
+    if: ${{ false }} # disabled
     runs-on: windows-2022
 
     steps:
@@ -54,6 +56,7 @@ jobs:
           WAIT_TIME_FACTOR_TEST: 10
 
   Linux:
+    if: ${{ false }} # disabled
     runs-on: ubuntu-22.04
 
     strategy:
