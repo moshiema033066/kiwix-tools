@@ -34,7 +34,7 @@ jobs:
       name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        run-id: ${{ github.event.workflow_run.id }}
+        pattern: '*'
         path: binaries
 
     - name: Prepare build context
