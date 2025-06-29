@@ -67,7 +67,7 @@ jobs:
         ninja -C build
 
     - name: Upload kiwix binaries
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: kiwix-tools-${{ github.sha }}
         path: |
