@@ -15,6 +15,17 @@ jobs:
       with:
         submodules: recursive
 
+    # --- APT sources: add Kiwix PPA (provides libzim & libkiwix) ---
+    - name: Add Kiwix PPA
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y --no-install-recommends curl gnupg dirmngr ca-certificates
+        sudo mkdir -p /etc/apt/keyrings
+        curl -fsSL "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x012AEA4FFD0486EA2F22C80C91262FF81F6F5758" | \
+          gpg --dearmor | sudo tee /etc/apt/keyrings/kiwix-archive.gpg > /dev/null
+        echo "deb [arch=amd64 signed-by=/etc/apt/keyrings/kiwix-archive.gpg] http://ppa.launchpad.net/kiwixteam/release/ubuntu jammy main" | \
+          sudo tee /etc/apt/sources.list.d/kiwix.list
+
     - name: Install build tool-chain & libraries
       run: |
         sudo apt-get update
