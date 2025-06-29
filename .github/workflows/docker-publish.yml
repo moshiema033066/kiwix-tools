@@ -23,18 +23,21 @@ jobs:
       with:
         ref: ${{ github.event.workflow_run.head_sha }}
 
-    - name: Download kiwix-tools artifact
+    - id: dl
+      name: Download kiwix-tools artifact
       uses: actions/download-artifact@v4
       with:
-        run-id: ${{ github.event.workflow_run.id }}
-      # artifact name is dynamic (kiwix-tools-<sha>) so we grab everything
+        pattern: kiwix-tools-*
+        merge-multiple: true
 
     - name: Prepare build context
       run: |
         mkdir buildctx
         # Artifact comes in a folder; find the zip and extract
-        SERVE=$(find "$GITHUB_WORKSPACE" -name kiwix-serve -type f | head -n1)
-        MANAGE=$(find "$GITHUB_WORKSPACE" -name kiwix-manage -type f | head -n1)
+        ART="$ART_DIR"
+        echo "Artifact directory: $ART"
+        SERVE=$(find "$ART" -name kiwix-serve -type f | head -n1)
+        MANAGE=$(find "$ART" -name kiwix-manage -type f | head -n1)
         if [ -z "$SERVE" ] || [ -z "$MANAGE" ]; then echo "Branded binaries not found in artifact" >&2; exit 1; fi
         cp "$SERVE" buildctx/kiwix-serve
         cp "$MANAGE" buildctx/kiwix-manage
@@ -78,3 +81,5 @@ jobs:
         tags: |
           ghcr.io/${{ github.repository_owner }}/surviveos-hub:latest
           ghcr.io/${{ github.repository_owner }}/surviveos-hub:sha-${{ github.event.workflow_run.head_sha }} 
+      env:
+        ART_DIR: ${{ steps.dl.outputs.download-path }} 
