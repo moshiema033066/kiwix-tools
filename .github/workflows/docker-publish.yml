@@ -36,6 +36,7 @@ jobs:
         pattern: kiwix-tools-*
         merge-multiple: true
         path: binaries
+        run-id: ${{ github.event.workflow_run.id }}
 
     - name: Prepare build context
       env:
