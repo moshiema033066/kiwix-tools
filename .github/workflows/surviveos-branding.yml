@@ -101,7 +101,7 @@ jobs:
         run: echo "Simulating Docker build..."
       - name: Build Docker image
         run: |
-          docker build -t test-image:latest .
+          docker build -f kiwix-offline-hub/Dockerfile -t test-image:latest kiwix-offline-hub
       - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
