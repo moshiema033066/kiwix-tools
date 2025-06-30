@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-brand:
     runs-on: ubuntu-latest
 
     steps:
@@ -80,4 +80,35 @@ jobs:
         if-no-files-found: error
         path: |
           build/**/kiwix-serve*
-          build/**/kiwix-manage* 
+          build/**/kiwix-manage*
+
+  publish-docker:
+    needs: build-and-brand
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      - name: Download kiwix binaries artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: kiwix-tools-${{ github.sha }}
+          path: binaries
+      - name: List downloaded artifacts
+        run: |
+          echo "Listing contents of binaries directory:"
+          ls -lR binaries
+      - name: Simulate Docker build
+        run: echo "Simulating Docker build..."
+      - name: Build Docker image
+        run: |
+          docker build -t test-image:latest .
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push Docker image to GHCR
+        run: |
+          docker tag test-image:latest ghcr.io/${{ github.repository_owner }}/test-image:latest
+          docker push ghcr.io/${{ github.repository_owner }}/test-image:latest 
