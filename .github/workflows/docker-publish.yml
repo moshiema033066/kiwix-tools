@@ -38,7 +38,8 @@ jobs:
         path: binaries
 
     - name: Debug: List files after artifact download
-      run: ls -lR binaries
+      run: |
+        ls -lR binaries
 
     - name: Prepare build context
       env:
