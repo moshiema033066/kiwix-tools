@@ -1,0 +1,15 @@
+title: "SurviveOS Hub"
+subtitle: "Offline Survival Knowledge Portal"
+description: "Access essential offline resources and survival guides – no internet needed."
+footerText: "© 2025 SurviveRX. All rights reserved."
+
+theme:
+  primaryColor: "#004d40"
+  backgroundColor: "#f4f4f4"
+  textColor: "#000000"
+  linkColor: "#00796b"
+
+logos:
+  light: "/branding/logo-light.png"
+  dark: "/branding/logo-dark.png"
+  square: "/branding/logo-square.png"

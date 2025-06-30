@@ -1,0 +1,40 @@
+services:
+  hub:
+    build: .
+    image: kiwix-offline-hub-hub:latest
+    ports:
+      - "8080:80"
+    volumes:
+      - "./zims:/data"
+      - "./branding:/kiwix/branding"
+      - "./branding/logo.png:/skin/common/logo.png"
+      - "./branding/logo_dark.png:/skin/common/logo_dark.png"
+    command:
+      - "--port=80"
+      - "--library"
+      - "/data/library.xml"
+    # customIndex removed to restore default library page
+
+  make-library:
+    build: .
+    image: kiwix-offline-hub-hub:latest
+    entrypoint: ["/usr/local/bin/make-library.sh"]
+    volumes:
+      - "./zims:/data"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
